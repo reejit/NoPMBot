@@ -12,15 +12,12 @@ There is an [ongoing issue](https://github.com/DeBotz/NoPMBot/issues) which make
 #### Mandatory Environment Variables
 
 * `TG_BOT_TOKEN`: Create a bot using [@BotFather](https://telegram.dog/BotFather), and get the Telegram API token.
-
 * `APP_ID`
 * `API_HASH`: Get these two values from [my.telegram.org/apps](https://my.telegram.org/apps).
   * N.B.: if Telegram is blocked by your ISP, try our [Telegram bot](https://telegram.dog/UseTGXBot) to get the IDs.
-
 * `AUTH_USERS`:
-Create a Super Group in Telegram, add `@GoogleIMGBot` to the group, and send /id in the chat, to get this value.
+Create a Super Group in Telegram, add `@MentholManager_Bot` to the group, and send /id in the chat, to get this value.
 You can add multiple IDs seperated by space.
-
 * `DATABASE_URL`: ~~if you are using Heroku, this value is automatically filled by the Postgres Plugin.~~ if you are not using Heroku, Read the guide on how to Install Database?, below.
 
 #### Optional Environment Variables
