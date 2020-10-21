@@ -14,12 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-""" users Table """
+""" blacklist Table """
 
+from pyrogram.types import Message
 from sqlalchemy import (
     Column,
     String,
-    Integer
+    UnicodeText
 )
 from . import (
     SESSION,
@@ -27,36 +28,46 @@ from . import (
 )
 
 
-class Users(BASE):
-    """ Table to store the received messages """
-    __tablename__ = "users"
-    message_id = Column(Integer, primary_key=True)
-    chat_id = Column(String(14))
-    um_id = Column(Integer)
+class BlackList(BASE):
+    """ table to store BANned users """
+    __tablename__ = "blacklist"
+    chat_id = Column(String(14), primary_key=True)
+    reason = Column(UnicodeText)
 
-    def __init__(self, message_id, chat_id, um_id):
-        self.message_id = message_id
+    def __init__(self, chat_id, reason):
         self.chat_id = str(chat_id)  # ensure string
-        self.um_id = um_id
+        self.reason = reason
 
     def __repr__(self):
-        return "<User %s>" % self.chat_id
+        return "<BL %s>" % self.chat_id
 
 
-Users.__table__.create(checkfirst=True)
+BlackList.__table__.create(checkfirst=True)
 
 
-def add_user_to_db(message_id: int, chat_id: int, um_id: int):
-    """ add the message to the table """
-    __user = Users(message_id, str(chat_id), um_id)
+def add_user_to_bl(chat_id: int, reason: str):
+    """ add the user to the blacklist """
+    __user = BlackList(str(chat_id), reason)
     SESSION.add(__user)
     SESSION.commit()
 
 
-def get_user_id(message_id: int):
-    """ get the user_id from the message_id """
-    try:
-        s__ = SESSION.query(Users).get(str(message_id))
-        return int(s__.chat_id), s__.um_id
-    finally:
-        SESSION.close()
+def check_is_black_list(message: Message):
+    """ check if user_id is blacklisted """
+    if message and message.from_user and message.from_user.id:
+        try:
+            s__ = SESSION.query(BlackList).get(str(message.from_user.id))
+            return s__
+        finally:
+            SESSION.close()
+
+
+def rem_user_from_bl(chat_id: int):
+    """ remove the user from the blacklist """
+    s__ = SESSION.query(BlackList).get(str(chat_id))
+    if s__:
+        SESSION.delete(s__)
+        SESSION.commit()
+        return True
+    SESSION.close()
+    return False
