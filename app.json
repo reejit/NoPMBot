@@ -12,7 +12,7 @@
     "channel",
     "administrators"
   ],
-  "repository": "https://github.com/DeBotz/NoPMBot/",
+  "repository": "https://github.com/reejit/NoPMBot/",
   "website": "https://telegram.dog/i420Smoker",
   "success_url": "https://t.me/i420Smoker",
   "env": {
